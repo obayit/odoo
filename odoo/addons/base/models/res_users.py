@@ -355,7 +355,15 @@ class Users(models.Model):
     @api.depends('tz')
     def _compute_tz_offset(self):
         for user in self:
-            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
+            now_date = datetime.datetime.now()
+            year = now_date.year
+            month = now_date.month
+            day = now_date.day
+            hour = now_date.hour
+            minute = now_date.minute
+            second = now_date.second
+            microsecond = now_date.microsecond
+            user.tz_offset = datetime.datetime(year, month, day, hour, minute, second, microsecond, pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
     @api.depends('groups_id')
     def _compute_accesses_count(self):
